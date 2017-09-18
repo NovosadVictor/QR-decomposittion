@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <malloc.h>
 #include <math.h>
+#include <time.h>
 
 
 
@@ -42,6 +43,11 @@ int main(int argc, char **argv) {
 			}
 			matrix[i * n + j] = elem;
 		}
+	char c;
+	if (fscanf(fi, "%c", &c) > 0) {
+		printf("NOT EOF\n");
+		return -1;
+	}
 
 	for (int i = 0; i < n; i++)
 		for (int j = 0; j < n; j++) {
@@ -51,8 +57,13 @@ int main(int argc, char **argv) {
 				result[i * n + j] = 0.0;
 		}
 
+	time_t start = clock();
+
 	QR_decomposition(n, matrix, result, d);
 
+	time_t end = clock();
+
+	printf("execution time: %f sec\n", (double)(end - start) / CLOCKS_PER_SEC);
 	free(matrix);
 	free(result);
 	free(d);
