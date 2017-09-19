@@ -1,2 +1,4 @@
 pr
 *.dat
+.idea
+cmake-build-debug
