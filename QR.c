@@ -27,6 +27,7 @@ int main(int argc, char **argv) {
         }
 
         double *matrix = (double *) malloc(n * n * sizeof(double));
+        double *matrix_for_norma = (double *) malloc(n * n * sizeof(double));
         double *result = (double *) malloc(n * n * sizeof(double));
         double *d = (double *) malloc(n * sizeof(double));
 
@@ -38,6 +39,7 @@ int main(int argc, char **argv) {
                     return -1;
                 }
                 matrix[i * n + j] = elem;
+                matrix_for_norma[i * n + j] = matrix[i * n + j];
             }
         char c;
         if (fscanf(fi, "%c", &c) > 0) {
@@ -53,15 +55,22 @@ int main(int argc, char **argv) {
                     result[i * n + j] = 0.0;
             }
 
+        printf("Input matrix\n");
+        print(matrix, n);
+
         time_t start = clock();
 
         if (QR_decomposition(n, matrix, result, d) == 1) {
-            printf("\nDegenerate matrix\n");
+            printf("\nSingular matrix\n");
             return -1;
         }
 
         time_t end = clock();
+        printf("Resulting matrix\n");
         print(result, n);
+
+        double norma = find_norma(n, result, matrix_for_norma, d);
+        printf("\nNorma: %lf\n", norma);
 
         printf("execution time: %f sec\n", (double) (end - start) / CLOCKS_PER_SEC);
         free(matrix);
@@ -73,12 +82,16 @@ int main(int argc, char **argv) {
         int n = atoi(argv[2]);
 
         double *matrix = (double *) malloc(n * n * sizeof(double));
+        double *matrix_for_norma = (double *) malloc(n * n * sizeof(double));
         double *result = (double *) malloc(n * n * sizeof(double));
         double *d = (double *) malloc(n * sizeof(double));
 
         for (int i = 0; i < n; i++)
-            for (int j = 0; j < n; j++)
-                matrix[i * n + j] = formula(i, j);
+            for (int j = 0; j < n; j++) {
+                matrix[i * n + j] = formula(i, j, n);
+                matrix_for_norma[i * n + j] = matrix[i * n + j];
+            }
+
 
 
         for (int i = 0; i < n; i++)
@@ -89,15 +102,22 @@ int main(int argc, char **argv) {
                     result[i * n + j] = 0.0;
             }
 
+        printf("Input matrix\n");
+        print(matrix, n);
+
         time_t start = clock();
 
         if (QR_decomposition(n, matrix, result, d) == 1) {
-                printf("\nDegenerate matrix\n");
+                printf("\nSingular matrix\n");
                 return -1;
             }
 
         time_t end = clock();
+        printf("Resulting matrix\n");
         print(result, n);
+
+        double norma = find_norma(n, result, matrix_for_norma, d);
+        printf("\nNorma: %.10lf\n", norma);
 
         printf("execution time: %f sec\n", (double) (end - start) / CLOCKS_PER_SEC);
         free(matrix);

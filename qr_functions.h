@@ -8,6 +8,7 @@ int QR_decomposition(int n, double *matrix, double *result, double *d); // D - a
 void set_vector(int n, double *matrix, double *d, int k); // k - iteration
 void multiplicate(int n, double *matrix, double *d, int k); // left multiplicate matrix on unitar
 void build_result(int n, double *result, double *matrix, double *d);
+double find_norma(int n, double *matrix, double *reverse_matrix, double *d);
 
 
 void set_vector(int n, double *matrix, double *d, int k) {
@@ -102,7 +103,7 @@ int QR_decomposition(int n, double *matrix, double *result, double *d) {
         multiplicate(n, matrix, d, k);
     }
     d[n - 1] = matrix[(n - 1) * n + (n - 1)];
-    printf("R\n");
+/*    printf("R\n");
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
             if (j > i)
@@ -115,9 +116,9 @@ int QR_decomposition(int n, double *matrix, double *result, double *d) {
         printf("\n");
     }
     printf("\n\n");
-
+*/
     for (int i = 0; i < n; i++)
-        if (fabs(d[i]) < exp(-5))
+        if (fabs(d[i]) < exp(-15))
             return 1;
 
     // finding R^-1
@@ -136,13 +137,14 @@ int QR_decomposition(int n, double *matrix, double *result, double *d) {
     if (check_triangle == 1)
         return 0;
 
-    printf("R^-1\n");
+/*    printf("R^-1\n");
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++)
             printf("%lf ", result[i * n + j]);
         printf("\n");
     }
-    printf("\n\n");
+*/
+ //    printf("\n\n");
     // writing R^-1 to the matrix
     for (int i = 0; i < n - 1; i++)
         for (int j = i + 1; j < n; j++) {
@@ -161,5 +163,36 @@ int QR_decomposition(int n, double *matrix, double *result, double *d) {
     return 0;
 
 }
+
+
+double find_norma(int n, double *matrix, double *reverse_matrix, double *d){
+    for (int j = 0; j < n; j++) {
+        for (int i = 0; i < n; i++)
+            d[i] = matrix[i * n + j];
+        for (int i = 0; i < n; i++) {
+            double sum = 0.0;
+            for (int l = 0; l < n; l++)
+                sum += d[l] * reverse_matrix[i * n + l];
+            matrix[i * n + j] = sum;
+        }
+    }
+    for (int i = 0; i < n; i++)
+        matrix[i * n + i] -= 1.0;
+/*    printf("Zero matrix\n");
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++)
+            printf("%lf ", matrix[i * n + j]);
+        printf("\n");
+    }
+    printf("\n");
+*/    // Finding max^2 element
+    double max = 0.0;
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j < n; j++)
+            max += matrix[i * n + j] * matrix[i * n + j];
+
+    return sqrt(max);
+}
+
 
 #endif //QR_FUNCTIONS_H
