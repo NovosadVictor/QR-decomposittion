@@ -76,6 +76,7 @@ int main(int argc, char **argv) {
         free(matrix);
         free(result);
         free(d);
+        free(matrix_for_norma);
         fclose(fi);
     }
     if (atoi(argv[1]) == 1) {
@@ -123,6 +124,7 @@ int main(int argc, char **argv) {
         free(matrix);
         free(result);
         free(d);
+        free(matrix_for_norma);
     }
 	return 0;
 }
